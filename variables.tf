@@ -1,6 +1,8 @@
 variable "directory" {
-  type = string
+  description = "Local directory to be synced with S3"
+  type        = string
 }
 variable "bucket" {
-  type = string
+  description = "Bucket name"
+  type        = string
 }
