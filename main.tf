@@ -6,7 +6,7 @@ terraform {
     }
   }
 }
-resource "aws_s3_object" "cv_files" {
+resource "aws_s3_object" "files" {
   for_each = fileset(var.directory, "*")
   bucket   = var.bucket
   key      = each.value
@@ -14,6 +14,8 @@ resource "aws_s3_object" "cv_files" {
   content_type = lookup(local.mimetypes,
     regex("\\.(\\w+)$", each.value)[0],
   "application/octet-stream")
-  cache_control = "max-age=3600"
-  etag          = filemd5("${var.directory}${each.value}")
+  cache_control = lookup(var.cache_control_by_extension,
+    regex("\\.(\\w+)$", each.value)[0],
+  var.cache_control_default)
+  etag = filemd5("${var.directory}${each.value}")
 }
